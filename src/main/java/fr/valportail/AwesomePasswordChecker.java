@@ -1,3 +1,19 @@
+/*
+ * Copyright 2024 Jean BOUYSSOUX, Valentin PORTAIL
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+
 package fr.valportail;
 
 import java.io.BufferedReader;
@@ -12,20 +28,36 @@ import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * An incredible password checker
+ *
+ * @author Maxime ESCOURBIAC, reviewed by Valentin PORTAIL
+ */
 public class AwesomePasswordChecker {
 
   private static AwesomePasswordChecker instance;
 
   private final List<double[]> clusterCenters = new ArrayList<>();
 
+  /**
+   * Returns the instance of AwesomePasswordChecker. If this instance is null, creates a new one using a file as an input stream.
+   *
+   * @param file A file which will be used as an input
+   * @return The instance of AwesomePasswordChecker
+   * @throws IOException If there is a problem with the input
+   */
   public static AwesomePasswordChecker getInstance(File file) throws IOException {
     if (instance == null) {
           instance = new AwesomePasswordChecker(new FileInputStream(file));
     }
     return instance;
   }
-  
+
+  /**
+   * Returns the instance of AwesomePasswordChecker. If this instance is null, creates a new one from scratch.
+   * @return The instance of AwesomePasswordChecker
+   * @throws IOException If there is a problem with the input
+   */
   public static AwesomePasswordChecker getInstance() throws IOException {
     if (instance == null) {
       InputStream is = AwesomePasswordChecker.class.getClassLoader().getResourceAsStream("cluster_centers_HAC_aff.csv");
@@ -33,7 +65,7 @@ public class AwesomePasswordChecker {
     }
       return instance;
   }
-      
+
   private AwesomePasswordChecker(InputStream is) throws IOException {
     BufferedReader br = new BufferedReader(new InputStreamReader(is));
   String line;
@@ -49,6 +81,11 @@ public class AwesomePasswordChecker {
     br.close();
   }
 
+  /**
+   * Generates the coordinates of a point from a password
+   * @param password A password
+   * @return A list containing the coordinates of the point
+   */
   public int[] maskAff(String password) {
     int[] maskArray = new int[28]; 
     int limit = Math.min(password.length(), 28);
@@ -107,7 +144,12 @@ public class AwesomePasswordChecker {
     return maskArray;
   }
 
-  public double getDIstance(String password) {
+  /**
+   * Computes the distance between the inputted password and the ideal one
+   * @param password The password to verify
+   * @return The minimal distance
+   */
+  public double getDistance(String password) {
     int[] maskArray = maskAff(password);
     double minDistance = Double.MAX_VALUE;
     for (double[] center : clusterCenters) {
@@ -124,6 +166,11 @@ public class AwesomePasswordChecker {
     return Math.sqrt(sum);
   }
 
+  /**
+   * Hashes the inputted string using the MD5 algorithm
+   * @param input The string to hash
+   * @return A new hashed string
+   */
   public static String ComputeMD5(String input) {
     byte[] message = input.getBytes();
     int messageLenBytes = message.length;
