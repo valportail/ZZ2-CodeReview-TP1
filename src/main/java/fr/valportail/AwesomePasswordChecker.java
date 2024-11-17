@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * An incredible password checker
+ * An incredible password checker.
  *
  * @author Maxime ESCOURBIAC, reviewed by Valentin PORTAIL
  */
@@ -48,7 +48,7 @@ public class AwesomePasswordChecker {
    */
   public static AwesomePasswordChecker getInstance(File file) throws IOException {
     if (instance == null) {
-          instance = new AwesomePasswordChecker(new FileInputStream(file));
+      instance = new AwesomePasswordChecker(new FileInputStream(file));
     }
     return instance;
   }
@@ -63,16 +63,17 @@ public class AwesomePasswordChecker {
       InputStream is = AwesomePasswordChecker.class.getClassLoader().getResourceAsStream("cluster_centers_HAC_aff.csv");
       instance = new AwesomePasswordChecker(is);
     }
-      return instance;
+
+    return instance;
   }
 
   private AwesomePasswordChecker(InputStream is) throws IOException {
     BufferedReader br = new BufferedReader(new InputStreamReader(is));
-  String line;
-    while((line = br.readLine()) != null){
-      String[] values = line.split(";");
+    String line;
+    while ((line = br.readLine()) != null) {
+      String[] values = line.split(",");
       double[] center = new double[values.length];
-      
+
       for (int i = 0; i < values.length; ++i) {
         center[i] = Double.parseDouble(values[i]);
       }
@@ -82,18 +83,18 @@ public class AwesomePasswordChecker {
   }
 
   /**
-   * Generates the coordinates of a point from a password
+   * Generates the mask of a password.
    * @param password A password
-   * @return A list containing the coordinates of the point
+   * @return A list representing the mask
    */
   public int[] maskAff(String password) {
-    int[] maskArray = new int[28]; 
+    int[] maskArray = new int[28];
     int limit = Math.min(password.length(), 28);
-    
+
     for (int i = 0; i < limit; ++i) {
-          char c = password.charAt(i);
-      switch (c) {
-        case 'e': 
+      char character = password.charAt(i);
+      switch (character) {
+        case 'e':
         case 's':
         case 'a':
         case 'i':
@@ -103,7 +104,7 @@ public class AwesomePasswordChecker {
         case 'u':
         case 'o':
         case 'l':
-            maskArray[i] = 1;
+          maskArray[i] = 1;
           break;
         case 'E':
         case 'S':
@@ -130,11 +131,11 @@ public class AwesomePasswordChecker {
           maskArray[i] = 6;
           break;
         default:
-          if (Character.isLowerCase(c)) {
+          if (Character.isLowerCase(character)) {
             maskArray[i] = 2;
-          } else if (Character.isUpperCase(c)) {
+          } else if (Character.isUpperCase(character)) {
             maskArray[i] = 4;
-          } else if (Character.isDigit(c)) {
+          } else if (Character.isDigit(character)) {
             maskArray[i] = 5;
           } else {
             maskArray[i] = 7;
@@ -145,7 +146,7 @@ public class AwesomePasswordChecker {
   }
 
   /**
-   * Computes the distance between the inputted password and the ideal one
+   * Computes the minimal distance between the inputted password and the center of each cluster.
    * @param password The password to verify
    * @return The minimal distance
    */
@@ -161,17 +162,17 @@ public class AwesomePasswordChecker {
   private double euclideanDistance(int[] a, double[] b) {
     double sum = 0;
     for (int i = 0; i < a.length; i++) {
-      sum += (a[i] - b[i]) * (a[i] + b[i]);
+      sum += (a[i] + b[i]) * (a[i] + b[i]);
     }
     return Math.sqrt(sum);
   }
 
   /**
-   * Hashes the inputted string using the MD5 algorithm
+   * Hashes the inputted string using the MD5 algorithm.
    * @param input The string to hash
    * @return A new hashed string
    */
-  public static String ComputeMD5(String input) {
+  public static String computeMD5(String input) {
     byte[] message = input.getBytes();
     int messageLenBytes = message.length;
 
@@ -226,7 +227,8 @@ public class AwesomePasswordChecker {
       int d = h[3];
 
       for (int j = 0; j < 64; j++) {
-        int f, g;
+        int f;
+        int g;
         if (j < 16) {
           f = (b & c) | (~b & d);
           g = j;
@@ -240,7 +242,7 @@ public class AwesomePasswordChecker {
           f = c ^ (b | ~d);
           g = (7 * j) % 16;
         }
-        int temp = d;
+        final int temp = d;
         d = c;
         c = b;
         b = b + Integer.rotateLeft(a + f + k[j] + w[g], r[j]);
