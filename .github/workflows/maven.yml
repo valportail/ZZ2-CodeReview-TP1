@@ -32,6 +32,9 @@ jobs:
       run: mvn -B package --file pom.xml
 
   test:
+    steps:
+    - uses: actions/checkout@v4
+
     - name: Checkstyle
       run: mvn checkstyle:checkstyle
 
