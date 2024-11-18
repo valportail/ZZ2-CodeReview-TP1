@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package fr.valportail;
+package fr.isima;
 
 import java.io.IOException;
 
