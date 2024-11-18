@@ -43,8 +43,8 @@ jobs:
     - name: Unit Tests
       run: mvn test
 
-    - name: Cobertura
-      run: mvn cobertura:cobertura
+    - name: Jacoco
+      run: mvn jacoco:check
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
     - name: Update dependency graph
