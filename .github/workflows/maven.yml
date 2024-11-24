@@ -28,7 +28,7 @@ jobs:
         distribution: 'temurin'
         cache: maven
 
-    - name: Build with Maven
+    - name: Build
       run: mvn -B package --file pom.xml
 
   test:
@@ -44,4 +44,7 @@ jobs:
       run: mvn test
 
     - name: Jacoco
-      run: mvn jacoco:check
+      run: mvn jacoco:check; cp -r target/site/jacoco jacoco
+
+    - name: Javadoc
+      run: mvn javadoc:javadoc
